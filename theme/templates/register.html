@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block title %}
+<title>Investment App - Register</title>
+{% endblock title %} {% block content %}
+<div class="flex justify-center items-center h-screen bg-gray-200 p-4 md:p-0">
+  <div
+    class="flex flex-col justify-center items-center border bg-white p-4 rounded-lg shadow-lg w-full md:w-1/3">
+    <h6 class="text-2xl text-green-500 text-center">
+      Sign Up To Investment Idea Tracker
+    </h6>
+    <p class="text-sm text-gray-600 my-2">
+        Sign up to create an account and start tracking your investing ideas.
+    </p>
+    <form action="{% url 'register' %}" method="post" class="w-full mb-4">
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="first_name">
+          First Name
+        </label>
+        <input
+          class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+          id="first_name"
+          type="text"
+          placeholder="First Name"
+          name="first_name"
+          required />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="last_name">
+          Last Name
+        </label>
+        <input
+          class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+          id="last_name"
+          type="text"
+          placeholder="Last Name"
+          name="last_name"
+          required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+          Email
+        </label>
+        <input
+          class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+          id="email"
+          type="email"
+          placeholder="Email"
+          name="email"
+          required />
+      </div>
+      <div class="mb-3">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password">
+          Password
+        </label>
+        <input
+          class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+          id="password"
+          type="password"
+          placeholder="Password"
+          name="password"
+          required />
+      </div>
+      <div class="flex flex-col items-center justify-between">
+        <button
+          class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit">
+          Submit
+        </button>
+      </div>
+       <span class="text-sm text-gray-600 mt-2 flex justify-end">
+          Already have an account? &nbsp;
+          <a
+            class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800"
+            href="{% url 'login' %}">
+            Login
+          </a>
+        </span>
+    </form>
+  </div>
+</div>
+{% endblock content %}
