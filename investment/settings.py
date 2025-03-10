@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
 ]
 
+AUTH_USER_MODEL = 'app.CustomUser'
 TAILWIND_APP_NAME = 'theme'
 
 INTERNAL_IPS = [
@@ -87,8 +88,12 @@ WSGI_APPLICATION = 'investment.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'investment',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
