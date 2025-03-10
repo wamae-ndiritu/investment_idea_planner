@@ -11,6 +11,7 @@
         Sign up to create an account and start tracking your investing ideas.
     </p>
     <form action="{% url 'register' %}" method="post" class="w-full mb-4">
+      {% csrf_token %}
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -51,20 +52,36 @@
           name="email"
           required />
       </div>
-      <div class="mb-3">
+     <div class="flex space-x-4 mb-3">
+       <div class="">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
-          for="password">
+          for="password1">
           Password
         </label>
         <input
           class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-          id="password"
+          id="password1"
           type="password"
           placeholder="Password"
-          name="password"
+          name="password1"
           required />
       </div>
+       <div class="">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password2">
+          Confirm Password
+        </label>
+        <input
+          class="appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+          id="password2"
+          type="password"
+          placeholder="Password"
+          name="password2"
+          required />
+      </div>
+     </div>
       <div class="flex flex-col items-center justify-between">
         <button
           class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
