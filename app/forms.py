@@ -29,7 +29,7 @@ class InvestmentIdeaForm(forms.ModelForm):
             'summary': forms.Textarea(attrs={'class': 'h-16 appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none mb-3', 'placeholder': 'Summary', 'rows': '4'}),
             'price_range': forms.TextInput(attrs={'class': 'appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none my-3', 'placeholder': 'Price Range'}),
         }
-
+        
 class InvestmentPlanForm(forms.ModelForm):
     class Meta:
         model = InvestmentPlan

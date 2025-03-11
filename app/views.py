@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CustomerRegistrationForm, ProfileForm, InvestmentIdeaForm, InvestmentPlanForm, SavingForm
@@ -88,6 +88,12 @@ def admin_dashboard(request):
 def get_investment_ideas(request):
     investment_ideas = InvestmentIdea.objects.all()
     return render(request, 'admin/ideas.html', {'investment_ideas': investment_ideas})
+
+
+@admin_required
+def get_investment_idea_details(request, idea_id):
+    investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
+    return render(request, 'admin/idea_details.html', {'investment_idea': investment_idea})
 
 @admin_required
 def create_investment_idea(request):
