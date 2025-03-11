@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 from datetime import datetime, timedelta
+from ckeditor_uploader.fields import RichTextUploadingField
+from bs4 import BeautifulSoup
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password):
@@ -45,13 +47,20 @@ class CustomUser(AbstractUser, PermissionsMixin):
 class InvestmentIdea(models.Model):
     title = models.CharField(max_length=200)
     summary = models.TextField()
-    content = models.TextField()
+    content = RichTextUploadingField()
     price_range = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
         return self.title
+    
+    def extract_thumbnail(self):
+        soup = BeautifulSoup(self.content, 'html.parser')
+        img_tag = soup.find('img')
+        if img_tag:
+            return img_tag['src']
+        return None
 
 class InvestmentPlan(models.Model):
     title = models.CharField(max_length=200)
@@ -102,7 +111,7 @@ class Notification(models.Model):
     investment_plan = models.ForeignKey(InvestmentPlan, on_delete=models.CASCADE, related_name='notifications')
     subject = models.CharField(max_length=200)
     recepient = models.EmailField()
-    message = models.TextField()
+    message = RichTextUploadingField()
     created_at = models.DateTimeField(auto_now_add=True)
     sent = models.BooleanField(default=False)
 

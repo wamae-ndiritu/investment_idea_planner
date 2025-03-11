@@ -6,6 +6,7 @@ from .models import InvestmentIdea, InvestmentPlan, CustomUser, Saving, Notifica
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required
+import json
 
 @login_required(login_url='login')
 def home(request):
@@ -92,13 +93,15 @@ def get_investment_ideas(request):
 def create_investment_idea(request):
     form = InvestmentIdeaForm()
     if request.method == 'POST':
-        form = InvestmentIdeaForm(request.POST)
+        form = InvestmentIdeaForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Investment idea added successfully')
-            return redirect('investment_idea')
+            return redirect('admin_investment_ideas')
         else:
-            messages.error(request, 'Invalid form data')
+            errors = json.loads(form.errors.as_json())
+            for msg in errors:
+                messages.error(request, f"{msg}: {errors[msg][0]['message']}")
     else:
         form = InvestmentIdeaForm()
     return render(request, 'admin/idea_form.html', {'form': form})
