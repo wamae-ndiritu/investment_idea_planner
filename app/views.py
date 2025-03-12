@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required
 import json
+from django.db.models import Q
 
 @login_required(login_url='login')
 def home(request):
@@ -94,6 +95,24 @@ def get_investment_ideas(request):
 def get_investment_idea_details(request, idea_id):
     investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
     return render(request, 'admin/idea_details.html', {'investment_idea': investment_idea})
+
+
+@admin_required
+def search_investment_ideas(request):
+    query = request.GET.get('q', '')
+    investment_ideas = InvestmentIdea.objects.filter(
+        Q(title__icontains=query) | Q(summary__icontains=query) | Q(content__icontains=query)
+    )
+    highlighted_ideas = []
+    for idea in investment_ideas:
+        highlighted_idea = {
+            'id': idea.id,
+            'title': idea.title.replace(query, f'<mark>{query}</mark>'),
+            'summary': idea.summary.replace(query, f'<mark>{query}</mark>'),
+            'content': idea.content.replace(query, f'<mark>{query}</mark>')
+        }
+        highlighted_ideas.append(highlighted_idea)
+    return render(request, 'admin/search_results.html', {'investment_ideas': highlighted_ideas, 'query': query})
 
 @admin_required
 def create_investment_idea(request):
