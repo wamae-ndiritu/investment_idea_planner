@@ -112,6 +112,37 @@ def create_investment_idea(request):
         form = InvestmentIdeaForm()
     return render(request, 'admin/idea_form.html', {'form': form})
 
+
+@admin_required
+def edit_investment_idea(request, idea_id):
+    investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
+    if request.method == 'POST':
+        form = InvestmentIdeaForm(request.POST, request.FILES, instance=investment_idea)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Investment idea updated successfully')
+            return redirect('admin_investment_ideas')
+        else:
+            errors = json.loads(form.errors.as_json())
+            for msg in errors:
+                messages.error(request, f"{msg}: {errors[msg][0]['message']}")
+    else:
+        form = InvestmentIdeaForm(instance=investment_idea)
+    return render(request, 'admin/idea_form.html', {'form': form, 'type': 'edit'})
+
+@admin_required
+def delete_investment_idea(request, idea_id):
+    cancel_url = request.session.get('cancel_url', request.META.get('HTTP_REFERER', 'admin_investment_ideas'))
+    investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
+    if request.method == 'POST':
+        investment_idea.delete()
+        messages.success(request, 'Investment idea deleted successfully')
+        return redirect('admin_investment_ideas')
+    else:
+        request.session['cancel_url'] = cancel_url
+        return render(request, 'admin/delete.html', {'description': investment_idea.title, 'id': idea_id, 'cancel_url': cancel_url})
+    
+
 @admin_required
 def get_users(request):
     users = CustomUser.objects.all()

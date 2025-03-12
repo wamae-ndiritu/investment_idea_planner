@@ -1,41 +1,44 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		{% block title %}
-		<title>Investment Idea App</title>
-		{% endblock title %}
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
-		{% tailwind_css %}
-	</head>
 
-	<body class="bg-gray-50">
-		{% block content %}
-		{% endblock %}
-		 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-		 <!-- TOASTR scripts -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" rel="stylesheet">
-            {% if messages %}
-            {% for message in messages %}
-            {% if message.tags == 'success'%}
-            <script type="text/javascript">toastr['success']('{{ message }}');</script>
-            {% elif message.tags == 'info' %}
-            <script type=text/javascript>toastr['info']('{{ message }}')</script>
-            {% elif message.tags == 'warning' %}
-            <script type=text/javascript>toastr['warning']('{{ message }}')</script>
-            {% elif message.tags == 'error' %}
-            <script type=text/javascript>toastr['error']('{{ message }}')</script>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-			
-			<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-			<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-	</body>
+<head>
+	{% block title %}
+	<title>Investment Idea App</title>
+	{% endblock title %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
+	{% tailwind_css %}
+</head>
+
+<body class="bg-gray-50">
+	{% block content %}
+	{% endblock %}
+	<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<!-- TOASTR scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" rel="stylesheet">
+	{% if messages %}
+	{% for message in messages %}
+	{% if message.tags == 'success'%}
+	<script type="text/javascript">toastr['success']('{{ message }}');</script>
+	{% elif message.tags == 'info' %}
+	<script type=text/javascript>toastr['info']('{{ message }}')</script>
+	{% elif message.tags == 'warning' %}
+	<script type=text/javascript>toastr['warning']('{{ message }}')</script>
+	{% elif message.tags == 'error' %}
+	<script type=text/javascript>toastr['error']('{{ message }}')</script>
+	{% endif %}
+	{% endfor %}
+	{% endif %}
+
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+</body>
+
 </html>

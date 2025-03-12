@@ -60,6 +60,22 @@ class InvestmentIdea(models.Model):
         if img_tag:
             return img_tag['src']
         return None
+    
+    def get_excerpt(self):
+        return self.summary[:100]
+    
+    def resize_images(self):
+        soup = BeautifulSoup(self.content, 'html.parser')
+        img_tags = soup.find_all('img')
+        for img_tag in img_tags:
+            img_tag['width'] = '100%'
+            img_tag['height'] = 'auto'
+            img_tag['style'] = 'display: block; margin: 0 auto; width: 100%; object-fit: cover;'
+        return str(soup)
+    
+    def save(self, *args, **kwargs):
+        self.content = self.resize_images()
+        super().save(*args, **kwargs)
 
 class InvestmentPlan(models.Model):
     title = models.CharField(max_length=200)

@@ -3,20 +3,23 @@
 <title>Investment Idea Details</title>
 {% endblock title %}
 {% block admin_content %}
-<div class="w-full">
-    <div class="w-full flex flex-col md:flex-row md:justify-between md:items-center mb-3 mt-1 md:pl-3 space-y-2 md:space-y-0">
+<div class="w-full lg:w-2/3 mx-auto bg-white p-4 rounded-lg relative">
+    <div
+        class="w-full flex flex-col md:flex-row md:justify-between md:items-center mb-3 mt-1 md:pl-3 space-y-2 md:space-y-0">
         <div>
-            <h2 class="text-lg font-semibold text-green-500">{{investment_idea.title}}</h2>
-            <p class="text-slate-500">{{investment_idea.summary}}</p>
+            <h2 class="text-lg font-semibold text-green-500 my-3">{{investment_idea.title}}</h2>
+            <p class="text-slate-500 py-2">{{investment_idea.summary}}</p>
         </div>
     </div>
     <div class="bg-white text-slate-500 flex flex-col space-y-2 md:pl-3">
-            {{investment_idea.content|safe}}
-            <p class="mb-4">
-                Estimated Range: {{ idea.price_range }}</p>
-            <a href="{% url 'admin_investment_idea_details'  idea_id=investment_idea.id %}" class="text-blue-500 underline">
-                View More
-            </a>
+        {{investment_idea.content|safe}}
+        <p class="my-4">
+            Estimated Range: {{ investment_idea.price_range }}</p>
+        <div class="flex space-x-4 justify-center">
+            <a href="{% url 'edit_investment_idea' idea_id=investment_idea.id %}"
+                class="bg-green-400 text-white rounded-md p-2">Edit</a>
+            <a href="" class="bg-red-400 text-white rounded-md p-2">Delete</a>
+        </div>
     </div>
 </div>
 {% endblock %}
