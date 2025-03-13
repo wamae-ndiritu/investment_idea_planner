@@ -7,6 +7,9 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('account/profile/', views.profile, name='profile'),
+    path('investment-ideas/', views.user_get_investment_ideas, name='investment_ideas'),
+     path('investment-ideas/<int:idea_id>/', views.user_get_investment_idea_details,
+           name='investment_idea_details'),
     path('admin/', views.admin_dashboard, name='admin'),
     path('admin/ideas/', views.get_investment_ideas, name='admin_investment_ideas'),
     path('admin/ideas/<int:idea_id>/', views.get_investment_idea_details,
@@ -16,7 +19,7 @@ urlpatterns = [
          name='edit_investment_idea'),
     path('admin/ideas/<int:idea_id>/delete/', views.delete_investment_idea,
          name='delete_investment_idea'),
-    path('admin/ideas/search/', views.search_investment_ideas,
+    path('investment-ideas/search', views.search_investment_ideas,
          name='search_investment_ideas'),
     path('admin/users', views.get_users, name='users'),
 ]

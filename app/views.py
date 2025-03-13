@@ -11,7 +11,8 @@ from django.db.models import Q
 
 @login_required(login_url='login')
 def home(request):
-    return render(request, 'home.html')
+    featured_ideas = InvestmentIdea.objects.all().order_by('-created_at')[:3]
+    return render(request, 'home.html', {'page': 'home', 'investment_ideas': featured_ideas})
 
 def register(request):
     form = CustomerRegistrationForm()
@@ -81,6 +82,16 @@ def profile(request):
         form = ProfileForm(instance=user)
     return render(request, 'profile.html', {'form': form})
 
+
+def user_get_investment_ideas(request):
+    investment_ideas = InvestmentIdea.objects.all()
+    return render(request, 'ideas.html', {'investment_ideas': investment_ideas})
+
+
+def user_get_investment_idea_details(request, idea_id):
+    investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
+    return render(request, 'idea_details.html', {'investment_idea': investment_idea})
+
 @admin_required
 def admin_dashboard(request):
     return render(request, 'admin/dashboard.html')
@@ -97,9 +108,9 @@ def get_investment_idea_details(request, idea_id):
     return render(request, 'admin/idea_details.html', {'investment_idea': investment_idea})
 
 
-@admin_required
 def search_investment_ideas(request):
     query = request.GET.get('q', '')
+    search_type = request.GET.get('type', 'all')
     investment_ideas = InvestmentIdea.objects.filter(
         Q(title__icontains=query) | Q(summary__icontains=query) | Q(content__icontains=query)
     )
@@ -109,10 +120,16 @@ def search_investment_ideas(request):
             'id': idea.id,
             'title': idea.title.replace(query, f'<mark>{query}</mark>'),
             'summary': idea.summary.replace(query, f'<mark>{query}</mark>'),
-            'content': idea.content.replace(query, f'<mark>{query}</mark>')
+            'content': idea.content.replace(query, f'<mark>{query}</mark>'),
+            'price_range': idea.price_range,
+            'extract_thumbnail': idea.extract_thumbnail
         }
         highlighted_ideas.append(highlighted_idea)
-    return render(request, 'admin/search_results.html', {'investment_ideas': highlighted_ideas, 'query': query})
+    if search_type == 'normal_search':
+        return render(request, 'ideas.html', {'investment_ideas': highlighted_ideas, 'query': query})
+    else:
+        return render(request, 'admin/ideas.html', {'investment_ideas': highlighted_ideas, 'query': query})
+    
 
 @admin_required
 def create_investment_idea(request):
