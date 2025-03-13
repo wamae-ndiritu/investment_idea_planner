@@ -87,6 +87,10 @@ class InvestmentPlan(models.Model):
     target_amount = models.DecimalField(max_digits=10, decimal_places=2)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     is_notification_enabled = models.BooleanField(default=False)
+    notification_date = models.DateField(null=True, blank=True)
+
+    def generate_title(self):
+        return f'{self.investment_idea.title} - {self.start_date} - {self.end_date}'
     
 
     def default_pay_day():
@@ -111,12 +115,20 @@ class InvestmentPlan(models.Model):
     def total_savings(self):
         return sum([saving.amount for saving in self.savings.all()])
     
+    def get_savings_progress(self):
+        return (self.total_savings() / self.target_amount) * 100
+    
     def target_balance(self):
         return self.target_amount - self.total_savings()
+    
+    def save(self, *args, **kwargs):
+        self.title = self.generate_title()
+        super().save(*args, **kwargs)
 
 class Saving(models.Model):
     investment_plan = models.ForeignKey(InvestmentPlan, on_delete=models.CASCADE, related_name='savings')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(default=datetime.today)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

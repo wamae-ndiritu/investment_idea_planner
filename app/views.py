@@ -9,7 +9,6 @@ from .decorators import admin_required
 import json
 from django.db.models import Q
 
-@login_required(login_url='login')
 def home(request):
     featured_ideas = InvestmentIdea.objects.all().order_by('-created_at')[:3]
     return render(request, 'home.html', {'page': 'home', 'investment_ideas': featured_ideas})
@@ -129,6 +128,85 @@ def search_investment_ideas(request):
         return render(request, 'ideas.html', {'investment_ideas': highlighted_ideas, 'query': query})
     else:
         return render(request, 'admin/ideas.html', {'investment_ideas': highlighted_ideas, 'query': query})
+    
+
+@login_required(login_url='login')
+def create_investment_plan(request, idea_id):
+    investment_idea = get_object_or_404(InvestmentIdea, id=idea_id)
+    existing_plan = InvestmentPlan.objects.filter(
+        user=request.user, investment_idea=investment_idea).first()
+    if request.method == 'POST':
+        form = InvestmentPlanForm(request.POST)
+        if form.is_valid():
+            investment_plan = form.save(commit=False)
+            investment_plan.user = request.user
+            investment_plan.investment_idea = investment_idea
+            investment_plan.save()
+            form = InvestmentPlanForm(instance=investment_plan)
+            messages.success(request, 'Calculations completed')
+            return render(request, 'investment_plan.html', {'form': form, 'investment_idea': investment_idea, 'step': 1, 'calculations': {
+                'id': investment_plan.id,
+                'expected_investment_amount': investment_plan.target_amount,
+                'number_of_months': investment_plan.get_no_of_months(),
+                'salary': investment_plan.salary,
+                'monthly_savings': investment_plan.get_monthly_savings()
+            }})
+        else:
+            errors = json.loads(form.errors.as_json())
+            for msg in errors:
+                messages.error(request, f"{msg}: {errors[msg][0]['message']}")
+    else:
+        form = InvestmentPlanForm()
+        if existing_plan:
+            messages.info(
+                request, 'You already have an investment plan for this idea. Please view your existing plan.')
+            return redirect('view_investment_plan', plan_id=existing_plan.id)
+    return render(request, 'investment_plan.html', {'form': form, 'investment_idea': investment_idea, 'step': 1})
+
+@login_required(login_url='login')
+def set_savings_reminder(request, plan_id):
+    investment_plan = get_object_or_404(InvestmentPlan, id=plan_id)
+    dates = [day for day in range(1, 32)]
+    form = InvestmentPlanForm(instance=investment_plan)
+    if request.method == 'POST':
+        is_notification_enabled = request.POST.get('reminders', 'off')
+        salary_date = request.POST.get('salary_date')
+        if is_notification_enabled == 'off':
+            investment_plan.is_notification_enabled = False
+            investment_plan.save()
+            messages.warning(request, 'Automatic reminders disabled')
+        else:
+            investment_plan.is_notification_enabled = True
+            investment_plan.notification_time = salary_date
+            investment_plan.save()
+            messages.success(request, 'Automatic reminders enabled')
+        return render(request, 'investment_plan.html', {'form': form, 'investment_idea': investment_plan.investment_idea, 'step': 3, 'days': dates, 'investment_plan': investment_plan})
+    else:
+        return render(request, 'investment_plan.html', {'form': form, 'investment_idea': investment_plan.investment_idea, 'step': 2, 'days': dates, 'investment_plan': investment_plan})
+
+@login_required(login_url='login')
+def list_investment_plans(request):
+    investment_plans = InvestmentPlan.objects.filter(user=request.user)
+    return render(request, 'investment_plans.html', {'investment_plans': investment_plans})
+
+@login_required(login_url='login')
+def view_investment_plan(request, plan_id):
+    investment_plan = get_object_or_404(InvestmentPlan, id=plan_id)
+    if request.method == 'POST':
+        form = SavingForm(request.POST)
+        if form.is_valid():
+            saving = form.save(commit=False)
+            saving.user = request.user
+            saving.investment_plan = get_object_or_404(InvestmentPlan, id=plan_id)
+            saving.save()
+            messages.success(request, 'Saving recorded successfully')
+            return redirect('view_investment_plan', plan_id=plan_id)
+        else:
+            errors = json.loads(form.errors.as_json())
+            for msg in errors:
+                messages.error(request, f"{msg}: {errors[msg][0]['message']}")
+    else:
+        return render(request, 'plan_details.html', {'investment_plan': investment_plan, 'savings': Saving.objects.filter(investment_plan=investment_plan).order_by('-id')})
     
 
 @admin_required

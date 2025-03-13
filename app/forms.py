@@ -14,9 +14,9 @@ class ProfileForm(forms.ModelForm):
         model = CustomUser
         fields = ['first_name', 'last_name', 'email']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'first_name': forms.TextInput(attrs={'class': 'appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none mb-3', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none mb-3', 'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'class': 'appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 focus:outline-none mb-3', 'placeholder': 'Email'}),
         }
 
 class InvestmentIdeaForm(forms.ModelForm):
@@ -33,10 +33,10 @@ class InvestmentIdeaForm(forms.ModelForm):
 class InvestmentPlanForm(forms.ModelForm):
     class Meta:
         model = InvestmentPlan
-        fields = ['title', 'investment_idea', 'start_date', 'end_date', 'target_amount', 'salary']
+        fields = ['start_date', 'end_date', 'target_amount', 'salary']
 
 
 class SavingForm(forms.ModelForm):
     class Meta:
         model = Saving
-        fields = ['amount']
+        fields = ['amount', 'date']
