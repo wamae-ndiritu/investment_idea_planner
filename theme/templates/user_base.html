@@ -12,7 +12,7 @@
             <div class="relative z-10 p-8 rounded"></div>
         {% endif %}
         <nav class="absolute top-0 left-0 w-full py-4 px-16 flex justify-between items-center bg-black bg-opacity-50">
-            <a href="{% url 'home' %}" class="text-white text-2xl">Investment Tracker</a>
+            <a href="{% url 'home' %}" class="text-white text-2xl">E-Investment Ideas Planner</a>
             <div class="md:hidden">
                 <button id="menu-toggle" class="text-white focus:outline-none">
                     <i class="fas fa-bars"></i>
@@ -30,10 +30,6 @@
                 </li>
                {% endif %}
                 <li><a href="{% url 'investment_ideas' %}" class="hover:text-green-500">Ideas</a></li>
-               {% if page == 'home' %}
-                     <li><a href="#about" class="hover:text-green-500">About</a></li>
-                <li><a href="#contact" class="hover:text-green-500">Contact</a></li>
-               {% endif %}
                 {% if request.user.is_authenticated %}
                     <li>
                         <a href="{% url 'profile' %}" class="hover:text-green-500">Hi, {{ request.user.first_name|default:"Admin" }} 👋</a>
@@ -48,7 +44,9 @@
         </nav>
         {% if page == 'home' %}
             <div class="relative z-10 p-8 rounded">
-            <h1 class="text-5xl text-green-500 mb-4">Investment Idea Tracker</h1>
+            <h1 class="text-5xl text-green-500 mb-4">
+                E-INVESTMENT IDEAS PLANNER APP
+            </h1>
             <p class="text-xl text-white mb-8">Find and track your investment ideas with ease</p>
             <a href="#features" class="bg-green-500 text-white py-2 px-4 rounded">Learn More</a>
         </div>
@@ -68,12 +66,12 @@
 </section>
 <footer class="bg-black text-white py-4 mt-8">
     <div class="container mx-auto text-center">
-        <p>&copy; 2025 Investment Idea Tracker. All rights reserved.</p>
-        <p>Follow us on
+        <p>&copy; 2025 E-investment Ideas Planner App. All rights reserved.</p>
+        <!-- <p>Follow us on
             <a href="#" class="text-green-500 hover:text-green-700">Twitter</a>,
             <a href="#" class="text-green-500 hover:text-green-700">Facebook</a>, and
             <a href="#" class="text-green-500 hover:text-green-700">LinkedIn</a>.
-        </p>
+        </p> -->
     </div>
 </footer>
 {% endblock %}
