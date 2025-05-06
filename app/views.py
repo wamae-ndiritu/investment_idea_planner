@@ -48,7 +48,6 @@ def login_user(request):
     password = request.POST.get('password')
     user = authenticate(request, email=email, password=password)
     if user is not None:
-        print("Logged in user: ", user)
         login(request, user)
         messages.success(request, 'Signed in successfully')
         return_url = request.POST.get('return_url', None)
@@ -93,7 +92,15 @@ def user_get_investment_idea_details(request, idea_id):
 
 @admin_required
 def admin_dashboard(request):
-    return render(request, 'admin/dashboard.html')
+    user_count = CustomUser.objects.count()
+    investment_idea_count = InvestmentIdea.objects.count()
+    investment_plan_count = InvestmentPlan.objects.count()
+    context = {
+        'user_count': user_count,
+        'investment_idea_count': investment_idea_count,
+        'investment_plan_count': investment_plan_count,
+    }
+    return render(request, 'admin/dashboard.html', context)
 
 @admin_required
 def get_investment_ideas(request):
